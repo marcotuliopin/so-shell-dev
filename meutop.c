@@ -55,18 +55,19 @@ int main() {
             perror("Error opening /proc directory");
             return 1;
         }
-
-        while ((entry = readdir(proc_dir)) != NULL) {
+        int i=0;
+        while ((entry = readdir(proc_dir)) != NULL && i<20) {
             // Check if the entry is a directory and represents a process ID
             if (entry->d_type == DT_DIR && atoi(entry->d_name) != 0) {
                 print_process_info(entry->d_name);
+                i++;
             }
         }
 
         closedir(proc_dir);
 
         // Wait for one second before updating the table
-        sleep(100);
+        sleep(1);
     }
 
     return 0;
