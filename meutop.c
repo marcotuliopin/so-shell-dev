@@ -5,6 +5,7 @@
 #include <dirent.h>
 #include <sys/types.h>
 #include <pwd.h>
+#include <signal.h>
 
 void print_process_info(const char *pid) {
     char path[100];
@@ -68,6 +69,20 @@ int main() {
 
         // Wait for one second before updating the table
         sleep(1);
+
+
+        int pid, signal;
+        scanf("%d %d", &pid, &signal);
+        
+        int result = kill(pid, signal);
+        if (result == 0) {
+            printf("Signal %d sent to process with PID %d.\n", signal, pid);
+        } else {
+            perror("Error sending signal");
+        }
+
+        // Clear the input buffer
+        while ((getchar()) != '\n');
     }
 
     return 0;
