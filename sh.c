@@ -57,6 +57,7 @@ void
 runcmd(struct cmd *cmd)
 {
   int p[2], r;
+  pid_t pid;
   struct execcmd *ecmd;
   struct pipecmd *pcmd;
   struct redircmd *rcmd;
@@ -96,10 +97,7 @@ runcmd(struct cmd *cmd)
     /* MARK START task3
      * TAREFA3: Implemente codigo abaixo para executar
      * comando com redirecionamento. */
-    if (rcmd->type == '<')
-      freopen(rcmd->file, "r", stdin);
-    else
-      freopen(rcmd->file, "w", stdout);
+    dup2(open(rcmd->file, rcmd->mode, S_IRWXU), rcmd->fd);
     /* MARK END task3 */
     runcmd(rcmd->cmd);
     break;
@@ -109,6 +107,26 @@ runcmd(struct cmd *cmd)
     /* MARK START task4
      * TAREFA4: Implemente codigo abaixo para executar
      * comando com pipes. */
+    if (pipe(p) < 0){
+      fprintf(stderr, "falha ao criar pipe\n");
+      exit(-1);
+    }
+    pid = fork();
+    if (pid == -1){
+      perror("fork");
+    }
+    else if (pid == 0){ // child process
+      wait(NULL);
+      close(p[1]);
+      dup2(p[0], fileno(stdin));
+      runcmd(pcmd->right);
+    }
+    else{ // parent process
+      close(p[0]);
+      dup2(p[1], fileno(stdout));
+      runcmd(pcmd->left);
+    }
+    
     fprintf(stderr, "pipe nao implementado\n");
     /* MARK END task4 */
     break;
