@@ -13,9 +13,8 @@ Preencha as linhas abaixo com o nome e o e-mail dos integrantes do
 grupo.  Substitua XX pela contribuição de cada membro do grupo no
 desenvolvimento do trabalho.
 
-Nome <email@domain.br> XX%
-Nome <email@domain.br> XX%
-Nome <email@domain.br> XX%
+Gabriel Lima Nunes <gabrielliman2002@gmail.com> 50%
+Marco Túlio  <email@domain.br> 50%
 
 3. Referências bibliográficas
 
@@ -23,5 +22,13 @@ Adicione aqui as referências bibliográficas.
 
 4. Estruturas de dados
 
-Descreva e justifique as estruturas de dados e algoritmos utilizados
-em sua solução.
+
+Parte 2:
+Primeiramente, criamos a função print_process_info em que recebemos um PID acessamos o arquivo de /proc/PID/status/, lemos as linhas que começam com Uid, Name e State para adquirir o id de Usuário, que mais depois será utilizado para identificar o usuário, o nome e o estado. Nessa mesma função, utilizamos a função getpwuid da bibilioteca pwd para descobrir o nome do usuário e realizamos o print desses dados formatados.
+Com essa função pronta, podemos finalizar a primeira parte do nosso top, criando a função list_process em que percorremos os diretórios dentro de proc e utilizamos print_process_info para os primeiros 20 PIDs disponíveis. Esse processo é repetido a cada um segundo, garantindo que a lista apresentada esteja atualizada.
+Para o envio de sinais, precisamos adicionar uma nova função send_signal em que realizamos a leitura de um PID e do sinal que gostaria de ser enviado e utilizando a função kill enviamos esse sinal.
+Com as funções list_process e send_signal podemos criar uma thread para cada uma dessas funções e permitir seu funcionamento em paralelo. Desse modo, ambas as funcionalidades requeridas nesse programa estão disponíveis e funcionais simultaneamente.
+
+
+
+Descreva e justifique as estruturas de dados e algoritmos utilizados em sua solução.

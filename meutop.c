@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <pwd.h>
 #include <signal.h>
+#include <pthread.h> 
 
 void print_process_info(const char *pid) {
     char path[100];
@@ -39,22 +40,23 @@ void print_process_info(const char *pid) {
 
         struct passwd *pw = getpwuid(uid);
         if (pw != NULL) {
-            printf("%-6s| %-15s| %-25s| %-3s|\n", pid, pw->pw_name, process_name, state);
+            printf("%-6s| %-15s| %-27s| %-7s|\n", pid, pw->pw_name, process_name, state);
         }
     }
 }
 
-int main() {
-    while (1) {
-        printf("PID   | User            | PROCNAME                   | Estado |\n");
-        printf("------+-----------------+-----------------------------+--------|\n");
+void *list_process(void *targs)
+{
+        while (1) {
+        printf("PID   | User           | PROCNAME                   | Estado |\n");
+        printf("------+----------------+----------------------------+--------|\n");
 
         DIR *proc_dir = opendir("/proc");
         struct dirent *entry;
 
         if (proc_dir == NULL) {
             perror("Error opening /proc directory");
-            return 1;
+            return NULL;
         }
         int i=0;
         while ((entry = readdir(proc_dir)) != NULL && i<20) {
@@ -69,21 +71,32 @@ int main() {
 
         // Wait for one second before updating the table
         sleep(1);
+}
+}
 
-
+void *send_signal(void *targs) {
+    while(1){
         int pid, signal;
-        scanf("%d %d", &pid, &signal);
-        
+        int read_numbers = scanf("%d %d", &pid, &signal);
+        if(read_numbers==2){
         int result = kill(pid, signal);
-        if (result == 0) {
-            printf("Signal %d sent to process with PID %d.\n", signal, pid);
-        } else {
-            perror("Error sending signal");
+            if (result == 0) {
+                printf("Signal %d sent to process with PID %d.\n", signal, pid);
+            } else {
+                perror("Error sending signal");
+            }
         }
 
         // Clear the input buffer
         while ((getchar()) != '\n');
-    }
+}
+}
 
-    return 0;
+int main()
+{
+    pthread_t thread_signal, thread_process;
+    pthread_create(&thread_signal, NULL, list_process, NULL);
+    pthread_create(&thread_process, NULL, send_signal, NULL);
+    pthread_join(thread_signal, NULL);
+    pthread_join(thread_process, NULL);  
 }
