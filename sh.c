@@ -8,9 +8,8 @@
 #include <sys/stat.h>
 #include <sys/wait.h>
 
-/* MARK NAME Marco Túlio de Pinho Tavares Tristão
-/* MARK NAME Gabriel Lima Nunes
-/* MARK NAME E Etc */
+/* MARK NAME Marco Túlio de Pinho Tavares Tristão */
+/* MARK NAME Gabriel Lima Nunes */
 
 /****************************************************************
  * Shell xv6 simplificado
@@ -56,7 +55,7 @@ struct cmd *parsecmd(char*); // Processar o linha de comando.
 void
 runcmd(struct cmd *cmd)
 {
-  int p[2], r;
+  int p[2];
   pid_t pid;
   struct execcmd *ecmd;
   struct pipecmd *pcmd;
