@@ -18,7 +18,10 @@ Marco Túlio  <marcotuliopin@ufmg.br> 50%
 
 3. Referências bibliográficas
 
-Adicione aqui as referências bibliográficas.
+https://linux.die.net/man/2/pipe
+https://linux.die.net/man/2/fork
+https://linux.die.net/man/2/close
+https://linux.die.net/man/3/exec
 
 4. Estruturas de dados
 
